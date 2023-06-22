@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mah Heng Motor Enterprise</title>
-    <link rel="stylesheet" href="./stylesheets/global-styles.css">
+    <title>Customers | Mah Heng Motor Enterprise</title>
+    <link rel="stylesheet" href="../stylesheets/global-styles.css">
 </head>
 <body>
     <div class="header">
