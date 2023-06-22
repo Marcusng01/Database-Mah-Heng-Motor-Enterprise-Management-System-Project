@@ -10,11 +10,11 @@
     <div class="header">
         <div class="header-logo"><img src="" alt="Logo"></div>
         <div class="header-logo-excluder">
-            <div class="header-button" onclick="window.location.href = './php-pages/customers.php'">Customers</div>
-            <div class="header-button" onclick="window.location.href = './php-pages/invoices.php'">Invoices</div>
-            <div class="header-button" onclick="window.location.href = './php-pages/services.php'">Services</div>
-            <div class="header-button" onclick="window.location.href = './php-pages/stock.php'">Stock</div>
-            <div class="header-button" onclick="window.location.href = 'index.html'">Log Out</div>
+        <div class="header-button" onclick="window.location.href = 'customers.php'">Customers</div>
+            <div class="header-button" onclick="window.location.href = 'invoices.php'">Invoices</div>
+            <div class="header-button" onclick="window.location.href = 'services.php'">Services</div>
+            <div class="header-button" onclick="window.location.href = 'stock.php'">Stock</div>
+            <div class="header-button" onclick="window.location.href = '../index.html'">Log Out</div>
         </div>
     </div>
 
@@ -22,6 +22,6 @@
     <div class="footer">
         <div class="footer-logo"><img src="All Pages/logo.png" alt="Logo"></div>
     </div>
-    <script type="text/javascript" src="./scripts/global-scripts.js"></script>   
+    <script type="text/javascript" src="../scripts/global-scripts.js"></script>
 </body>
 </html>
