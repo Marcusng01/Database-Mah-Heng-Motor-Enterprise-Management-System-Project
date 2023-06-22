@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 22, 2023 at 03:35 PM
+-- Generation Time: Jun 22, 2023 at 04:26 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -29,8 +29,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `component` (
   `Component_ID` int(6) NOT NULL,
-  `Name` varchar(255) NOT NULL,
-  `Quantity` int(6) NOT NULL
+  `Component_Name` varchar(255) NOT NULL,
+  `Component_Quantity` int(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -41,8 +41,8 @@ CREATE TABLE `component` (
 
 CREATE TABLE `customer_details` (
   `Customer_ID` int(6) NOT NULL,
-  `Name` varchar(255) NOT NULL,
-  `Phone_Number` varchar(255) NOT NULL
+  `Customer_Name` varchar(255) NOT NULL,
+  `Customer_Contact_Number` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -53,8 +53,8 @@ CREATE TABLE `customer_details` (
 
 CREATE TABLE `invoice_details` (
   `Invoice_ID` int(6) NOT NULL,
-  `Date` date DEFAULT NULL,
-  `Total_Price` decimal(10,2) DEFAULT NULL,
+  `Invoice_Date` date DEFAULT NULL,
+  `Invoice_Total_Price` decimal(10,2) DEFAULT NULL,
   `Supplier_ID` int(6) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -67,8 +67,8 @@ CREATE TABLE `invoice_details` (
 CREATE TABLE `ordered_component` (
   `Invoice_ID` int(6) NOT NULL,
   `Component_ID` int(6) NOT NULL,
-  `Price` decimal(10,2) NOT NULL,
-  `Quantity` int(6) NOT NULL
+  `Ordered_Component_Price` decimal(10,2) NOT NULL,
+  `Ordered_Component_Quantity` int(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -80,7 +80,7 @@ CREATE TABLE `ordered_component` (
 CREATE TABLE `service` (
   `Service_ID` int(6) NOT NULL,
   `Description` varchar(255) NOT NULL,
-  `Total_Price` decimal(10,2) NOT NULL,
+  `Service_Total_Price` decimal(10,2) NOT NULL,
   `Service_Date` date NOT NULL,
   `Motor_ID` varchar(255) NOT NULL,
   `Customer_ID` int(6) NOT NULL
@@ -95,8 +95,8 @@ CREATE TABLE `service` (
 CREATE TABLE `service_component` (
   `Service_ID` int(6) NOT NULL,
   `Component_ID` int(6) NOT NULL,
-  `Price_Per_Unit` decimal(10,2) NOT NULL,
-  `Quantity` int(6) NOT NULL
+  `Service_Component_Price_Per_Unit` decimal(10,2) NOT NULL,
+  `Service_Component_Quantity` int(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -107,8 +107,8 @@ CREATE TABLE `service_component` (
 
 CREATE TABLE `supplier_details` (
   `Supplier_ID` int(6) NOT NULL,
-  `Name` varchar(255) NOT NULL,
-  `Phone_Number` varchar(20) DEFAULT NULL
+  `Supplier_Name` varchar(255) NOT NULL,
+  `Supplier_Contact_Number` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
