@@ -28,7 +28,7 @@
                     <th id="dateHeader" onclick="toggleSort()">Invoice Date</th>
                     <th>Supplier Name</th>
                     <th>Supplier Contact Number</th>
-                    <th>Components</th>
+                    <th>Invoice Total Price</th>
                 </tr>
             </thead>
             <tbody>     
@@ -47,9 +47,9 @@
                     die("Connection failed: " . $conn->connect_error);
                 }
 
-                // Fetch service data from the database
-                $sql = "SELECT invoice_details.Invoice_ID, invoice_details.Invoice_Date, supplier_details.Supplier_Name,supplier_details.Supplier_Contact_Number FROM invoice_details
-                        INNER JOIN supplier_details ON  supplier_details.Supplier_Name and supplier_details.Supplier_Contact_Number
+                // Fetch invoiec data from the database
+                $sql = "SELECT invoice_details.Invoice_ID, invoice_details.Invoice_Date, invoice_details.Invoice_Total_Price, supplier_details.Supplier_Name,supplier_details.Supplier_Contact_Number FROM invoice_details
+                        INNER JOIN supplier_details ON  invoice_details.Supplier_ID = supplier_details.Supplier_ID
                         ORDER BY invoice_details.Invoice_Date DESC";
                 $result = $conn->query($sql);
 
@@ -60,10 +60,11 @@
                         echo "<td>" . $row["Invoice_Date"] . "</td>";
                         echo "<td>" . $row["Supplier_Name"] . "</td>";
                         echo "<td>" . $row["Supplier_Contact_Number"] . "</td>";
+                        echo "<td>" . $row["Invoice_Total_Price"] . "</td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='6'>No services found.</td></tr>";
+                    echo "<tr><td colspan='6'>No invoices found.</td></tr>";
                 }
 
                 $conn->close();
@@ -118,8 +119,8 @@
                 </div>
 
                 <div class="form-field">
-                    <label for="serviceDate">Invoice Date:</label>
-                    <input type="date" id="serviceDate" name="serviceDate" required><br>
+                    <label for="invoiceDate">Invoice Date:</label>
+                    <input type="date" id="invoiceDate" name="invoiceDate" required><br>
                 </div>
 
                 <div id="componentFieldsContainer">
@@ -147,7 +148,7 @@
     </div>
     <script type="text/javascript" src="../scripts/global-scripts.js"></script>
     <script>
-        // Function to toggle the sort order of the service date column
+        // Function to toggle the sort order of the invoice date column
         function toggleSort() {
             var table = document.getElementById("invoiceTable");
             var rows = Array.from(table.getElementsByTagName("tr"));
@@ -180,7 +181,7 @@
             totalPrice.value = (Math.round(totalPrice.value * 100) / 100).toFixed(2);
         }
 
-        // Function to add a service component
+        // Function to add a invoice component
         function addInvoiceComponent() {
             var componentAndQuantity ={}
             var componentFieldsContainer = document.getElementById("componentFieldsContainer");
@@ -191,7 +192,7 @@
             var label = document.createElement("label");
             label.classList.add("invoice-component-label")
             var select = document.createElement("select");
-            select.name = "invoiceComponents[" + numComponents + "][componentName]";
+            select.name = "invoiceComponents[" + numComponents + "][existingComponentName]";
             select.required = true;
             <?php
                 // Replace with your database connection details
@@ -220,7 +221,24 @@
                 }
                 $conn->close();
             ?>
-            select.oninput =function changeMaxQuantity(){quantityInput.max= componentAndQuantity[option.textContent]};
+            //Extra option to represent new component
+            var newComponentOption = document.createElement("option");
+            newComponentOption.textContent = "(New Component)";
+            newComponentOption.value = "new";
+            //Clicking on this new component option will hide dropdown and show textbox
+            select.oninput= function changeComponentFields(){
+                if (select.value=="new"){
+                    select.style.display = "none";
+                    select.required =false;
+                    newComponentText.style.display = "inline";
+                    newComponentText.required = true;
+                }
+            };
+            select.appendChild(newComponentOption);
+            var newComponentText = document.createElement("input");
+            newComponentText.type = "text";
+            newComponentText.name = "invoiceComponents[" + numComponents + "][newComponentName]";
+            newComponentText.style.display = "none";
             var quantityLabel = document.createElement("label");
             quantityLabel.textContent = "Quantity:";
             var quantityInput = document.createElement("input");
@@ -233,9 +251,6 @@
                 subTotalInput.value=(Math.round(quantityInput.value * priceInput.value * 100) / 100).toFixed(2);
                 updateGrandTotal()
             };
-            quantityInput.max= componentAndQuantity[option.textContent];
-
-
             var priceLabel = document.createElement("label");
             priceLabel.textContent = "Price per piece (RM):";
 
@@ -265,7 +280,7 @@
             removeButton.textContent = "Remove Component";
             removeButton.onclick = function() {
                 componentFieldsContainer.removeChild(div);
-                // Re-label the remaining service components
+                // Re-label the remaining invoice components
                 var labels = componentFieldsContainer.getElementsByClassName("invoice-component-label");
                 for (var i = 0; i < labels.length; i++) {
                     labels[i].innerHTML = "Invoice Component " + (i+1) + ":";
@@ -274,6 +289,7 @@
             };
             div.appendChild(label);
             div.appendChild(select);
+            div.appendChild(newComponentText);
             div.appendChild(quantityLabel);
             div.appendChild(quantityInput);
             div.appendChild(priceLabel);
@@ -282,7 +298,7 @@
             div.appendChild(subTotalInput);
             div.appendChild(removeButton);
             componentFieldsContainer.appendChild(div);
-            // Re-label the remaining service components
+            // Re-label the remaining invoice components
             var labels = componentFieldsContainer.getElementsByClassName("invoice-component-label");
             for (var i = 0; i < labels.length; i++) {
                 labels[i].innerHTML = "Invoice Component " + (i+1) + ":";

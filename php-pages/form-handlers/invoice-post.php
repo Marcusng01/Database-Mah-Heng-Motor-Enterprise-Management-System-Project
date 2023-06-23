@@ -15,58 +15,65 @@
         }
 
         // Retrieve form data
-        $serviceDescription = $_POST["description"];
-        $serviceTotalPrice = $_POST["totalPrice"];
+        $invoiceTotalPrice = $_POST["totalPrice"];
         $invoiceDate = $_POST["invoiceDate"]; 
-        $serviceMotorID = $_POST["motorcycleId"];
-        $serviceComponents = $_POST["serviceComponents"];
-
-        // Get Customer ID based on if the customer is existing or new
-        $supplierType = $_POST["customerType"];
-        if ($customerType == "existing"){
-            $customerID = $_POST["customerID"];
+        $invoiceComponents = $_POST["invoiceComponents"];
+        // Get Supplier ID based on if the supplier is existing or new
+        $supplierType = $_POST["supplierType"];
+        if ($supplierType == "existing"){
+            //Get Supplier ID from Dropdownbox
+            $supplierID = $_POST["supplierID"];
         }
-        else if ($customerType == "new"){
-            $customerName = $_POST["customerName"];
-            $customerPhone = $_POST["customerPhone"];
-            $customerQuery = "INSERT INTO customer_details (Customer_Name, Customer_Contact_Number) VALUES ('$customerName', '$customerPhone');";
-            if ($conn->query($customerQuery) === TRUE) {
-                $customerID = $conn->insert_id;
-            }
+        else if ($supplierType == "new"){
+            $supplierName = $_POST["supplierName"];
+            $supplierPhone = $_POST["supplierPhone"];
+            // Insert new supplier details
+            $supplierQuery = "INSERT INTO supplier_details (Supplier_Name, Supplier_Contact_Number) VALUES ('$supplierName', '$supplierPhone');";
+            $conn->query($supplierQuery);
+            //Get Supplier ID from insert query
+            $supplierID = $conn->insert_id;
         }
         else {
-            // Invalid customer option selected
-            echo "Invalid customer option selected.";
+            echo "Invalid supplier option selected.";
             exit();
         }
 
-        $serviceQuery = "INSERT INTO service (Description, Service_Total_Price, Service_Date, Motor_ID, Customer_ID) VALUES ('$serviceDescription','$serviceTotalPrice', '$serviceDate','$serviceMotorID','$customerID');";
-        if ($conn->query($serviceQuery) === TRUE) {
-            $serviceID = $conn->insert_id;
-            foreach($serviceComponents as $component){
-                $componentID = $component["componentName"];
+        // Insert invoice details
+        $invoiceQuery = "INSERT INTO invoice_details (Invoice_Total_Price, Invoice_Date, Supplier_ID) VALUES ('$invoiceTotalPrice', '$invoiceDate','$supplierID');";
+        if ($conn->query($invoiceQuery) === TRUE) {
+            //Based on new invoice id, insert ordered_components
+            $invoiceID = $conn->insert_id;
+            foreach($invoiceComponents as $component){
+                $componentID = $component["existingComponentName"];
                 $componentPricePerPiece = $component["pricePerPiece"];
                 $componentQuantity = $component["quantity"];
-                $serviceComponentQuery = "INSERT INTO service_component (Service_ID, Component_ID, Service_Component_Price_Per_Unit, Service_Component_Quantity) VALUES ($serviceID,$componentID,$componentPricePerPiece,$componentQuantity);";
-                if ($conn->query($serviceComponentQuery) === TRUE){
+                if ($componentID == "new"){
+                    $componentName = $component["newComponentName"];
+                    $newComponentQuery = "INSERT INTO component (Component_Name, Component_Quantity) VALUES ('$componentName',$componentQuantity);";
+                    print($newComponentQuery);
+                    $conn->query($newComponentQuery);
+                    $componentID = $conn->insert_id;
+                }
+                $invoiceComponentQuery = "INSERT INTO ordered_component (Invoice_ID, Component_ID, Ordered_Component_Price, Ordered_Component_Quantity) VALUES ($invoiceID,$componentID,$componentPricePerPiece,$componentQuantity);";
+                if ($conn->query($invoiceComponentQuery) === TRUE){
                     $stockQuantityQuery = "SELECT Component_Quantity FROM component WHERE Component_ID = $componentID";
                     $result = $conn->query($stockQuantityQuery);
                     $stockQuantity = $result->fetch_array()[0];
-                    $deductStockQuery = "UPDATE component SET Component_Quantity = $stockQuantity-$componentQuantity WHERE Component_ID = $componentID";
+                    $deductStockQuery = "UPDATE component SET Component_Quantity = $stockQuantity+$componentQuantity WHERE Component_ID = $componentID";
                     $result = $conn->query($deductStockQuery);
                 }
                 else{
-                    echo "Error: " . $serviceInsertSql . "<br>" . $conn->error;
+                    echo "Error: " . $invoiceInsertSql . "<br>" . $conn->error;
                     exit();
                 }
             }
         }
         else {
-            echo "Error: " . $serviceInsertSql . "<br>" . $conn->error;
+            echo "Error: " . $invoiceInsertSql . "<br>" . $conn->error;
             exit();
         }
         $conn->close();
-        header("Location: ../services.php");
+        header("Location: ../invoices.php");
         exit();
     }
 ?>
