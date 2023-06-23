@@ -66,7 +66,7 @@
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='5'>No services found.</td></tr>";
+                    echo "<tr><td colspan='6'>No services found.</td></tr>";
                 }
 
                 $conn->close();
