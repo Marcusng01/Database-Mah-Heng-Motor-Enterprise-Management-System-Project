@@ -12,8 +12,9 @@
         }
         
         th, td {
-            text-align: left;
-            padding: 8px;
+            border: 1px solid black;
+            padding: 5px;
+            text-align: center;
         }
         
         th {
@@ -86,7 +87,7 @@
     </div>
     <div class="content">
         <h1>Customer List</h1>
-        <input type="text" id="customerSearch" oninput="filterCustomers()" placeholder="Search by Name">
+        <input type="text" id="customerSearch" oninput="filterCustomers()" placeholder="Search by Name &#128270;">
         <table id="customerTable">
             <thead>
                 <tr>
