@@ -20,6 +20,7 @@
     </div>
     <div class="content">
         <h1>Service Management</h1>
+        <!-- Add Table For all Services -->
         <table id="serviceTable">
             <thead>
                 <tr>
@@ -74,25 +75,24 @@
         </table>
         <br>
         <button onclick="document.getElementById('addServiceForm').classList.add('display')">Add Service</button>
-
         <!-- Add Service Form Popup -->
         <div id="addServiceForm">
             <h2>Add Service</h2>
-            <form action="services.php" method="post">
+            <form action="./form-handlers/services-post.php" method="post">
 
                 <div class="form-field">
                     <label>
-                        <input type="radio" name="customerType" onclick="toggleCustomerFields()" checked>Existing Customer
+                        <input type="radio" name="customerType" value="existing" onclick="toggleCustomerFields()" checked>Existing Customer
                     </label>
                     <label>
-                        <input type="radio" name="customerType" id="newCustomerRadio" onclick="toggleCustomerFields()">New Customer
+                        <input type="radio" name="customerType" id="newCustomerRadio" value="new" onclick="toggleCustomerFields()">New Customer
                     </label>
                 </div>
 
                 <div class="form-field" id="customer-name-field">
                     <label for="customerName">Customer Name:</label>
                     <input type="text" id="customerNameText" name="customerName" >
-                    <select id="customerNameDropdown" name="customerName" >
+                    <select id="customerNameDropdown" name="customerID" >
                         <?php
                         // Fetch customer data from the database
                         $conn = new mysqli($servername, $username, $password, $database);
@@ -101,12 +101,12 @@
                             die("Connection failed: " . $conn->connect_error);
                         }
 
-                        $sql = "SELECT Customer_Name, Customer_Contact_Number FROM customer_details";
+                        $sql = "SELECT Customer_ID, Customer_Name, Customer_Contact_Number FROM customer_details";
                         $result = $conn->query($sql);
 
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
-                                echo "<option value='".$row["Customer_Name"]."%".$row["Customer_Contact_Number"]."'>" . $row["Customer_Name"] . " (" . $row["Customer_Contact_Number"] . ")</option>";
+                                echo "<option value='".$row["Customer_ID"]."'>" . $row["Customer_Name"] . " (" . $row["Customer_Contact_Number"] . ")</option>";
                             }
                         }
 
@@ -141,6 +141,11 @@
                 <div class="form-field">
                     <label for="totalPrice">Total Price (RM):</label>
                     <input type="number" id="totalPrice" name="totalPrice" step="0.1" readonly required><br>
+                </div>
+
+                <div class="form-field">
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" required></textarea><br>
                 </div>
 
                 <div class="form-field">
@@ -215,21 +220,21 @@
                     die("Connection failed: " . $conn->connect_error);
                 }
 
-                $selectComponentsSql = "SELECT Component_Name, Component_Quantity FROM component";
+                $selectComponentsSql = "SELECT Component_ID, Component_Name, Component_Quantity FROM component";
                 $result = $conn->query($selectComponentsSql);
 
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "var option = document.createElement('option');";
-                        echo "option.value = '" . $row["Component_Name"] . "';";
+                        echo "option.value = '" . $row["Component_ID"] . "';";
                         echo "option.textContent = '" . $row["Component_Name"] . "';";
                         echo "select.appendChild(option);";
-                        echo "componentAndQuantity['" . $row["Component_Name"] . "'] = '" . $row["Component_Quantity"] . "';";
+                        echo "componentAndQuantity['".$row["Component_Name"]."'] = ".$row["Component_Quantity"].";";
                     }
                 }
                 $conn->close();
             ?>
-            select.oninput =function changeMaxQuantity(){quantityInput.max= componentAndQuantity[select.value]};
+            select.oninput =function changeMaxQuantity(){quantityInput.max= componentAndQuantity[option.textContent]};
             var quantityLabel = document.createElement("label");
             quantityLabel.textContent = "Quantity:";
 
@@ -243,7 +248,7 @@
                 subTotalInput.value=(Math.round(quantityInput.value * priceInput.value * 100) / 100).toFixed(2);
                 updateGrandTotal()
             };
-            quantityInput.max= componentAndQuantity[select.value];
+            quantityInput.max= componentAndQuantity[option.textContent];
 
 
             var priceLabel = document.createElement("label");
@@ -305,8 +310,6 @@
             var customerNameText = document.getElementById("customerNameText");
             var customerPhoneField= document.getElementById("customer-phone-field");
 
-            
-
             if (!newCustomerRadio.checked) {
                 customerNameDropdown.style.display = "block";
                 customerNameDropdown.required = true;
@@ -330,48 +333,3 @@
     </script>
 </body>
 </html>
-
-<?php 
-    //Only run the code here if the HTTP has a post requests
-    if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-
-        $customerName = $_POST['customerName'];
-        $customerPhone = $_POST['customerPhone'];
-        $motorcycleId = $_POST['motorcycleId'];
-        $serviceDate = $_POST['serviceDate'];
-        $serviceComponents = $_POST["serviceComponents"];
-
-        $query="
-        // INSERT INTO customer_details (Customer_Name, Customer_Contact_Number) VALUES ('$customerName', '$customerPhone');
-        // INSERT INTO service (Customer_Name, Customer_Contact_Number) VALUES ('$customerName', '$customerPhone');
-        ";
-
-        foreach($serviceComponents as $component){
-            foreach($component as $attribute){
-                print($attribute);
-            }
-        }
-        
-
-        $conn = new mysqli($servername, $username, $password, $database);
-
-        // Check connection
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
-
-//         //Create Query
-//         $query="
-// -- Insert data
-// INSERT INTO $table (name, state, mobile_number, event_date, email, event_type, additional_notes, status) VALUES ('$name', '$state', '$mobile', '$date', '$email', '$type', '$notes', 0);
-// ";
-//         // Execute the SQL queries
-//         $conn->multi_query($query);
-
-        // Close the connection
-        $conn->close();
-        echo '<script type="text/javascript">';
-        // echo ' alert("Your application has been submitted!")';
-        echo '</script>';
-    }
-?>
