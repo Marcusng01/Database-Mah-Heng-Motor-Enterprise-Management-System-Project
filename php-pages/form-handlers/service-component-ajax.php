@@ -17,17 +17,18 @@ if (isset($_POST['id'])) {
     }
 
     // Fetch service data from the database
-    $sql = "SELECT component.Component_Name, ordered_component.Ordered_Component_Quantity, ordered_component.Ordered_Component_Price
-            FROM component INNER JOIN ordered_component ON component.Component_ID = ordered_component.Component_ID
-            WHERE ordered_component.Invoice_ID = $id
-            ORDER BY ordered_component.Component_ID DESC";
+    $sql = "SELECT component.Component_Name, service_component.Service_Component_Quantity, service_component.Service_Component_Price_Per_Unit
+            FROM component INNER JOIN service_component ON component.Component_ID = service_component.Component_ID
+            WHERE service_component.Service_ID = $id
+            ORDER BY service_component.Component_ID DESC";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             echo "<tr>";
             echo "<td>" . $row["Component_Name"] . "</td>";
-            echo "<td>" . $row["Ordered_Component_Quantity"] . "</td>";
-            echo "<td>" . $row["Ordered_Component_Price"] . "</td>";
+            echo "<td>" . $row["Service_Component_Quantity"] . "</td>";
+            echo "<td>" . $row["Service_Component_Price_Per_Unit"] . "</td>";
+            echo "<td>" . number_format((float)$row["Service_Component_Price_Per_Unit"]*$row["Service_Component_Quantity"], 2, '.', '') . "</td>";
             echo "</tr>";
         }
     } else {

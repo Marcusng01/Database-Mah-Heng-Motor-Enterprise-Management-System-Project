@@ -54,8 +54,8 @@
 </head>
 <body>
     <div class="header">
-        <div class="header-logo"><img src="" alt="Logo"></div>
         <div class="header-logo-excluder">
+            <div class="header-logo"><img src="../image/logo.png"></div>
             <div class="header-button" onclick="window.location.href = 'customers.php'">Customers</div>
             <div class="header-button" onclick="window.location.href = 'invoices.php'">Invoices</div>
             <div class="header-button" onclick="window.location.href = 'services.php'">Services</div>
@@ -74,7 +74,7 @@
                     <th>Motor ID</th>
                     <th>Customer Name</th>
                     <th>Service Description</th>
-                    <th>Service Total Price</th>
+                    <th>Service Total Price(RM)</th>
                 </tr>
             </thead>
             <tbody>
@@ -107,7 +107,7 @@
                         echo "<td>" . $row["Motor_ID"] . "</td>";
                         echo "<td>" . $row["Customer_Name"] . "</td>";
                         echo "<td>" . $row["Description"] . "</td>";
-                        echo "<td>" . $row["Service_Total_Price"] . "</td>";
+                        echo "<td id=total".$row['Service_ID'].">" . $row["Service_Total_Price"] . "</td>";
                         echo "<td><p><a href='#' data-id=".$row['Service_ID']." class='more'>More Details</a></p></td>";
                         echo "</tr>";
                     }
@@ -129,6 +129,7 @@
                         <th>Component Name</th>
                         <th>Quantity</th>
                         <th>Price Per Unit (RM)</th>
+                        <th>Subtotal (RM)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -220,7 +221,7 @@
         </div>
     </div>
     <div class="footer">
-        <div class="footer-logo"><img src="All Pages/logo.png" alt="Logo"></div>
+        <div class="footer-logo"><img src="../image/logo.png" alt="Logo"></div>
     </div>
     <script type="text/javascript" src="../scripts/global-scripts.js"></script>
     <script>
@@ -402,8 +403,8 @@
                     closePopup();
                 }else{
                     e.preventDefault();
-                    invoiceId = $(this).data("id")
-                    openPopup(invoiceId);
+                    serviceId = $(this).data("id")
+                    openPopup(serviceId);
                 }
             });
 
@@ -419,18 +420,20 @@
                 closePopup();
             });
 
-            function openPopup(invoiceId) {
+            function openPopup(serviceId) {
                 isOpen = true;
                 $.ajax({
                     type: "POST",
-                    url: "./form-handlers/ordered-component-ajax.php",
-                    data: { 'id': invoiceId },
+                    url: "./form-handlers/service-component-ajax.php",
+                    data: { 'id': serviceId },
                     success: function(response) {
                         // Handle the response from PHP here
                         $("div.popup tbody").html(response);
                         $("div.popup").fadeIn();
+                        $(".popup").find("h2:last").remove();
+                        $(".popup").append("<h2>TOTAL PRICE : RM" + $("#total"+serviceId).text() +"</h2>")
                     }
-                });
+                }); 
             }
 
             function closePopup(){

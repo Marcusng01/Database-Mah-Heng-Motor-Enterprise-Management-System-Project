@@ -76,8 +76,8 @@
 </head>
 <body>
     <div class="header">
-        <div class="header-logo"><img src="" alt="Logo"></div>
         <div class="header-logo-excluder">
+            <div class="header-logo"><img src="../image/logo.png"></div>
             <div class="header-button" onclick="window.location.href = 'customers.php'">Customers</div>
             <div class="header-button" onclick="window.location.href = 'invoices.php'">Invoices</div>
             <div class="header-button" onclick="window.location.href = 'services.php'">Services</div>
@@ -134,7 +134,7 @@
         </table>
     </div>
     <div class="footer">
-        <div class="footer-logo"><img src="All Pages/logo.png" alt="Logo"></div>
+        <div class="footer-logo"><img src="../image/logo.png" alt="Logo"></div>
     </div>
     <script type="text/javascript" src="../scripts/global-scripts.js"></script>
 </body>

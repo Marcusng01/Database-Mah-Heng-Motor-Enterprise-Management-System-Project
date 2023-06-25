@@ -55,8 +55,8 @@
 </head>
 <body>
     <div class="header">
-        <div class="header-logo"><img src="" alt="Logo"></div>
         <div class="header-logo-excluder">
+            <div class="header-logo"><img src="../image/logo.png"></div>
             <div class="header-button" onclick="window.location.href = 'customers.php'">Customers</div>
             <div class="header-button" onclick="window.location.href = 'invoices.php'">Invoices</div>
             <div class="header-button" onclick="window.location.href = 'services.php'">Services</div>
@@ -74,7 +74,7 @@
                     <th id="dateHeader" onclick="toggleSort()">Invoice Date</th>
                     <th>Supplier Name</th>
                     <th>Supplier Contact Number</th>
-                    <th>Invoice Total Price</th>
+                    <th>Invoice Total Price(RM)</th>
                 </tr>
             </thead>
             <tbody>     
@@ -106,7 +106,7 @@
                         echo "<td>" . $row["Invoice_Date"] . "</td>";
                         echo "<td>" . $row["Supplier_Name"] . "</td>";
                         echo "<td>" . $row["Supplier_Contact_Number"] . "</td>";
-                        echo "<td>" . $row["Invoice_Total_Price"] . "</td>";
+                        echo "<td id=total".$row['Invoice_ID'].">" . $row["Invoice_Total_Price"] . "</td>";
                         echo "<td><p><a href='#' data-id=".$row['Invoice_ID']." class='more'>More Details</a></p></td>";
                         echo "</tr>";
                     }
@@ -128,6 +128,7 @@
                         <th>Component Name</th>
                         <th>Quantity</th>
                         <th>Price Per Unit (RM)</th>
+                        <th>Subtotal (RM)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -209,7 +210,7 @@
         </div>
     </div>
     <div class="footer">
-        <div class="footer-logo"><img src="All Pages/logo.png" alt="Logo"></div>
+        <div class="footer-logo"><img src="../image/logo.png" alt="Logo"></div>
     </div>
     <script type="text/javascript" src="../scripts/global-scripts.js"></script>
     <script>
@@ -434,6 +435,8 @@
                         // Handle the response from PHP here
                         $("div.popup tbody").html(response);
                         $("div.popup").fadeIn();
+                        $(".popup").find("h2:last").remove();
+                        $(".popup").append("<h2>TOTAL PRICE: RM" + $("#total"+invoiceId).text() +"</h2>")
                     }
                 });
             }
