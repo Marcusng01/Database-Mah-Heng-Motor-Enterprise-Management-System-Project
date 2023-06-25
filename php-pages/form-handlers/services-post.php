@@ -29,6 +29,7 @@
         else if ($customerType == "new"){
             $customerName = $_POST["customerName"];
             $customerPhone = $_POST["customerPhone"];
+            // Insert new customer details
             $customerQuery = "INSERT INTO customer_details (Customer_Name, Customer_Contact_Number) VALUES ('$customerName', '$customerPhone');";
             if ($conn->query($customerQuery) === TRUE) {
                 $customerID = $conn->insert_id;
@@ -40,6 +41,7 @@
             exit();
         }
 
+        // Insert service details
         $serviceQuery = "INSERT INTO service (Description, Service_Total_Price, Service_Date, Motor_ID, Customer_ID) VALUES ('$serviceDescription','$serviceTotalPrice', '$serviceDate','$serviceMotorID','$customerID');";
         if ($conn->query($serviceQuery) === TRUE) {
             $serviceID = $conn->insert_id;

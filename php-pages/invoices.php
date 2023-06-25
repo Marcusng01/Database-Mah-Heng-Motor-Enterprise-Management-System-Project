@@ -93,7 +93,7 @@
                     die("Connection failed: " . $conn->connect_error);
                 }
 
-                // Fetch invoiec data from the database
+                // Fetch invoice data from the database
                 $sql = "SELECT invoice_details.Invoice_ID, invoice_details.Invoice_Date, invoice_details.Invoice_Total_Price, supplier_details.Supplier_Name,supplier_details.Supplier_Contact_Number FROM invoice_details
                         INNER JOIN supplier_details ON  invoice_details.Supplier_ID = supplier_details.Supplier_ID
                         ORDER BY invoice_details.Invoice_Date DESC";

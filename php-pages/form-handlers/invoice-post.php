@@ -49,6 +49,7 @@
                 $componentQuantity = $component["quantity"];
                 if ($componentID == "new"){
                     $componentName = $component["newComponentName"];
+                    //Insert new component details
                     $newComponentQuery = "INSERT INTO component (Component_Name, Component_Quantity) VALUES ('$componentName',$componentQuantity);";
                     print($newComponentQuery);
                     $conn->query($newComponentQuery);
