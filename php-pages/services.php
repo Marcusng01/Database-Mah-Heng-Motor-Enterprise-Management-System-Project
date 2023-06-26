@@ -296,12 +296,17 @@
                         echo "componentAndQuantity['".$row["Component_Name"]."'] = ".$row["Component_Quantity"].";";
                     }
                 }
+                else{
+                    echo "var option = document.createElement('option');";
+                    echo "option.value = 'new';";
+                    echo "option.textContent = 'No Existing components: Please Add Components at Invoice Tab';";
+                    echo "select.appendChild(option);";
+                }
                 $conn->close();
             ?>
             select.oninput =function changeMaxQuantity(){quantityInput.max= componentAndQuantity[option.textContent]};
             var quantityLabel = document.createElement("label");
             quantityLabel.textContent = "Quantity:";
-
             var quantityInput = document.createElement("input");
             quantityInput.type = "number";
             quantityInput.name = "serviceComponents[" + numComponents + "][quantity]";

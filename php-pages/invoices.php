@@ -285,6 +285,12 @@
                         echo "componentAndQuantity['".$row["Component_Name"]."'] = ".$row["Component_Quantity"].";";
                     }
                 }
+                else{
+                    echo "var option = document.createElement('option');";
+                    echo "option.value = 'new';";
+                    echo "option.textContent = 'No Existing Components';";
+                    echo "select.appendChild(option);";
+                }
                 $conn->close();
             ?>
             //Extra option to represent new component
