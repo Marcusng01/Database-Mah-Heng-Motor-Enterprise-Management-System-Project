@@ -293,7 +293,7 @@
                         echo "option.value = '" . $row["Component_ID"] . "';";
                         echo "option.textContent = '" . $row["Component_Name"] . "';";
                         echo "select.appendChild(option);";
-                        echo "componentAndQuantity['".$row["Component_Name"]."'] = ".$row["Component_Quantity"].";";
+                        echo "componentAndQuantity['".$row["Component_ID"]."'] = ".$row["Component_Quantity"].";";
                     }
                 }
                 else{
@@ -304,7 +304,7 @@
                 }
                 $conn->close();
             ?>
-            select.oninput =function changeMaxQuantity(){quantityInput.max= componentAndQuantity[option.textContent]};
+            select.oninput =function changeMaxQuantity(){quantityInput.max= componentAndQuantity[select.value]};
             var quantityLabel = document.createElement("label");
             quantityLabel.textContent = "Quantity:";
             var quantityInput = document.createElement("input");
@@ -317,8 +317,7 @@
                 subTotalInput.value=(Math.round(quantityInput.value * priceInput.value * 100) / 100).toFixed(2);
                 updateGrandTotal()
             };
-            quantityInput.max= componentAndQuantity[option.textContent];
-
+            quantityInput.max= componentAndQuantity[select.value]
 
             var priceLabel = document.createElement("label");
             priceLabel.textContent = "Price per piece (RM):";
