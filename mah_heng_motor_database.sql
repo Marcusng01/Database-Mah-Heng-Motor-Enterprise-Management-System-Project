@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `mah heng motor database`
 --
+CREATE DATABASE `mah heng motor database`;
+USE `mah heng motor database`;
 
 -- --------------------------------------------------------
 
